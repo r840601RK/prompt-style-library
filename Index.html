@@ -122,12 +122,7 @@
     .status { color: var(--muted); font-size: 14px; min-height: 22px; }
     .list { display: grid; gap: 12px; }
 
-    .card {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(240px, 0.78fr);
-      gap: 14px;
-      padding: 14px;
-    }
+    .card { padding: 14px; }
 
     .meta, .actions {
       display: flex;
@@ -163,33 +158,6 @@
       word-break: break-word;
     }
 
-    .preview {
-      min-height: 150px;
-      border: 1px solid rgba(90, 84, 70, 0.14);
-      border-radius: var(--radius);
-      overflow: hidden;
-      position: relative;
-      background: linear-gradient(160deg, var(--preview-a), var(--preview-b));
-    }
-
-    .preview::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.92), transparent 34%);
-    }
-
-    .preview span {
-      position: absolute;
-      left: 14px;
-      right: 14px;
-      bottom: 12px;
-      color: rgba(36, 35, 31, 0.78);
-      font-size: 13px;
-      line-height: 1.45;
-      text-shadow: 0 1px 10px rgba(255, 255, 255, 0.72);
-    }
-
     .empty { padding: 28px; text-align: center; color: var(--muted); }
 
     dialog {
@@ -205,7 +173,7 @@
 
     @media (max-width: 820px) {
       .topbar, .toolbar { align-items: stretch; flex-direction: column; }
-      .composer, .card { grid-template-columns: 1fr; }
+      .composer { grid-template-columns: 1fr; }
       .search { max-width: none; }
       .primary { width: 100%; }
     }
@@ -338,27 +306,20 @@
     }
 
     function cardTemplate(item) {
-      const colors = getPreviewColors(item.prompt + item.style);
       const prompt = escapeHtml(item.prompt);
       const style = escapeHtml(item.style || 'Untitled');
-      const summary = escapeHtml(item.prompt.slice(0, 120));
 
       return `
         <article class="card panel">
-          <div>
-            <div class="meta">
-              <div class="style-name">${style}</div>
-              <div class="actions">
-                <button class="ghost" type="button" data-copy="${encodeURIComponent(item.prompt)}">Copy</button>
-                <button class="ghost" type="button" data-edit="${item.row}">Edit</button>
-                <button class="danger" type="button" data-delete="${item.row}">Delete</button>
-              </div>
+          <div class="meta">
+            <div class="style-name">${style}</div>
+            <div class="actions">
+              <button class="ghost" type="button" data-copy="${encodeURIComponent(item.prompt)}">Copy</button>
+              <button class="ghost" type="button" data-edit="${item.row}">Edit</button>
+              <button class="danger" type="button" data-delete="${item.row}">Delete</button>
             </div>
-            <p class="prompt-text">${prompt}</p>
           </div>
-          <div class="preview" style="--preview-a: ${colors[0]}; --preview-b: ${colors[1]};">
-            <span>Prompt preview<br>${summary}</span>
-          </div>
+          <p class="prompt-text">${prompt}</p>
         </article>
       `;
     }
@@ -385,16 +346,6 @@
       const prompt = decodeURIComponent(encodedPrompt);
       await navigator.clipboard.writeText(prompt);
       setStatus('Copied.');
-    }
-
-    function getPreviewColors(seedText) {
-      let hash = 0;
-      for (let index = 0; index < seedText.length; index += 1) {
-        hash = ((hash << 5) - hash) + seedText.charCodeAt(index);
-        hash |= 0;
-      }
-      const hue = Math.abs(hash) % 360;
-      return [`hsl(${hue} 42% 82%)`, `hsl(${(hue + 42) % 360} 32% 68%)`];
     }
 
     function escapeHtml(value) {
