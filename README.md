@@ -15,7 +15,8 @@ Keep spreadsheet IDs, deployment URLs, API keys, and webhook URLs out of this re
 ## Files
 
 - `Code.gs`: Apps Script backend.
-- `Index.html`: Web app frontend.
+- `Index.html`: Apps Script web app frontend.
+- `index.html`: GitHub Pages entrypoint.
 - `appsscript.json`: Apps Script manifest.
 
 ## Features
@@ -27,7 +28,6 @@ Keep spreadsheet IDs, deployment URLs, API keys, and webhook URLs out of this re
 - Copy prompt with one click.
 - Edit prompts.
 - Delete prompts.
-- Show a lightweight prompt preview card.
 
 ## Deploy
 
